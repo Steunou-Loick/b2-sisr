@@ -1,0 +1,78 @@
+version: '3.4'
+services:
+  #Nginx Service
+  Figaro1:
+    image: nginx:alpine
+    container_name: Figaro-1
+    restart: unless-stopped
+    tty: true
+    expose:
+      - "80"
+    networks:
+      - traefik
+    labels:
+      - "traefik.docker.network=traefik"
+      - "traefik.backend=figaro"
+      - "traefik.frontend.rule=Host:figaro.localhost"
+      - "traefik.port=80" 
+    volumes:
+      - ./index-F1.html:/usr/share/nginx/html/index.html
+  
+  Figaro2:
+    image: nginx:alpine
+    container_name: Figaro-2
+    restart: unless-stopped
+    tty: true
+    expose:
+      - "80"
+    networks:
+      - traefik
+    labels:
+      - "traefik.docker.network=traefik"
+      - "traefik.backend=figaro"
+      - "traefik.frontend.rule=Host:figaro.localhost"
+      - "traefik.port=80" 
+    
+
+    volumes:
+      - ./index-F2.html:/usr/share/nginx/html/index.html
+  
+  webserver3:
+    image: nginx:alpine
+    container_name: Gorafi-1
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8091:80"
+    networks:
+      - traefik
+    volumes:
+      - ./indexG1.html:/usr/share/nginx/html/index.html
+  
+  webserver4:
+    image: nginx:alpine
+    container_name: Gorafi-2
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8092:80"
+    networks:
+      - app-network
+    volumes:
+      - ./indexG2.html:/usr/share/nginx/html/index.html
+
+
+
+
+
+#Docker Networks
+networks:
+ 
+  app-network:
+    driver: bridge
+  
+  
+  
+  traefik:
+    external: 
+      name: traefik_webgateway

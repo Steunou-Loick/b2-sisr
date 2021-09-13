@@ -1,0 +1,25 @@
+version: '3.7'
+services:
+  #Nginx Service
+ 
+  gorafi:
+    image: nginx:alpine
+    restart: unless-stopped
+    tty: true
+    expose:
+      - "80"
+    networks:
+      - traefik
+    labels:
+      - "traefik.docker.network=traefik"
+      - "traefik.backend=gorafi"
+      - "traefik.frontend.rule=Host:gorafi.localhost"
+      - "traefik.port=80"    
+    volumes:
+      - ./index-G1.html:/usr/share/nginx/html/index.html
+    
+#Docker Networks
+networks:
+  traefik:
+    external: 
+      name: traefik_webgateway
